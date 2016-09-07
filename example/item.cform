@@ -1,0 +1,66 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Example of DynamoDB Item",
+    "Metadata": {
+
+    },
+    "Parameters": {
+      "DynamoDBItemLambdaName": {
+          "Description": "DynamoDBItem lambda name",
+          "Type": "String"
+      }
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+      "MyDynamoDBTable" : {
+        "Type" : "AWS::DynamoDB::Table",
+        "Properties" : {
+          "TableName" : "MyTableName",
+          "AttributeDefinitions" : [{
+            "AttributeName" : "hashkey",
+            "AttributeType" : "S"
+          }, {
+            "AttributeName" : "rangekey",
+            "AttributeType" : "S"
+          }],
+          "KeySchema" : [{
+            "AttributeName" : "hashkey",
+            "KeyType" : "HASH"
+          }, {
+            "AttributeName" : "rangekey",
+            "KeyType" : "RANGE"
+          }],
+          "ProvisionedThroughput" : {
+            "ReadCapacityUnits" : "5",
+            "WriteCapacityUnits" : "5"
+          }
+        }
+      },
+
+      "MyDynamoDBItem": {
+        "Type": "Custom::DynamoDBItem",
+        "Version": "1.0",
+        "Properties": {
+          "ServiceToken": {"Fn::Join" : [":",[ "arn:aws:lambda", { "Ref": "AWS::Region" }, { "Ref": "AWS::AccountId" }, "function", { "Ref": "DynamoDBItemLambdaName" } ] ]},
+          "TableName": { "Ref": "MyDynamoDBTable" },
+          "Item": {
+            "hashkey": "my-hash-key",
+            "rangekey": "my-range-key",
+            "attr1": "boo",
+            "attr2": "foo",
+            "attr3": {
+              "attr4": "too"
+            }
+          }
+        }
+      }
+    },
+    "Outputs": {
+
+    }
+}

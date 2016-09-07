@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "required": [
+    "TableName",
+    "Item"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "TableName": {
+      "type": "string"
+    },
+    "Item": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
